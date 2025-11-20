@@ -4,6 +4,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import RelatedPost from "@/components/Blog/RelatedPost";
 import SharePost from "@/components/Blog/SharePost";
 import TagButton from "@/components/Blog/TagButton";
@@ -52,7 +53,8 @@ const BlogDetailsClient = () => {
   }, []);
 
   if (loading) return <p className="text-center py-20">Loading...</p>;
-  if (!blog || blog.error) return <p className="text-center py-20">Blog not found</p>;
+  if (!blog || blog.error)
+    return <p className="text-center py-20">Blog not found</p>;
 
   const { detail } = blog;
 
@@ -72,7 +74,11 @@ const BlogDetailsClient = () => {
                 <div className="mr-10 mb-5 flex items-center">
                   {blog.author?.image && (
                     <div className="relative mr-4 h-10 w-10 overflow-hidden rounded-full">
-                      <Image src={blog.author.image} alt={blog.author.name} fill />
+                      <Image
+                        src={blog.author.image}
+                        alt={blog.author.name}
+                        fill
+                      />
                     </div>
                   )}
                   <div>
@@ -131,8 +137,9 @@ const BlogDetailsClient = () => {
               )}
 
               {detail?.summary && (
-                
-                <div className="mb-8 text-base font-medium leading-relaxed text-body-color sm:text-lg">{detail.summary}</div>
+                <div className="mb-8 text-base font-medium leading-relaxed text-body-color sm:text-lg">
+                  {detail.summary}
+                </div>
               )}
 
               {/* Extra Tags */}
@@ -190,20 +197,20 @@ const BlogDetailsClient = () => {
               </h3>
               <ul className="px-8 py-6">
                 <li>
-                  <a
+                  <Link
                     href="../book"
                     className="mb-3 inline-block text-base font-medium text-body-color hover:text-primary"
                   >
                     Book Now
-                  </a>
+                  </Link>
                 </li>
                 <li>
-                  <a
+                  <Link
                     href="../contact"
                     className="mb-3 inline-block text-base font-medium text-body-color hover:text-primary"
                   >
                     Contact Us
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a
@@ -236,13 +243,13 @@ const BlogDetailsClient = () => {
               <div className="flex flex-wrap px-8 py-6">
                 {popularTags.length > 0 ? (
                   popularTags.map((tag, i) => (
-                    <a
+                    <Link
                       key={i}
                       href="/blog"
                       className="mr-2 mb-2 inline-flex items-center justify-center rounded-full bg-primary px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary/80"
                     >
                       {tag}
-                    </a>
+                    </Link>
                   ))
                 ) : (
                   <p className="text-sm text-body-color">No tags found</p>
@@ -259,3 +266,4 @@ const BlogDetailsClient = () => {
 };
 
 export default BlogDetailsClient;
+
