@@ -33,14 +33,14 @@ const ClientAgreement = () => {
 
     // 🔹 Read booking ID from localStorage
     let booking_id: string | null = null;
-    const bookingDataStr = localStorage.getItem("bookingData");
-    if (bookingDataStr) {
-      try {
+    try {
+      const bookingDataStr = localStorage.getItem("bookingData");
+      if (bookingDataStr) {
         const bookingData = JSON.parse(bookingDataStr);
-        booking_id = bookingData.id || null;
-      } catch (err) {
-        console.error("Error parsing bookingData from localStorage:", err);
+        booking_id = bookingData?.id || null;
       }
+    } catch (err) {
+      console.error("Error parsing bookingData from localStorage:", err);
     }
 
     if (!booking_id) {
@@ -63,7 +63,15 @@ const ClientAgreement = () => {
         }
       );
 
-      const data = await response.json();
+      // ✅ Ensure valid JSON parsing
+      const data = await response.json().catch(() => ({
+        status: "error",
+        message:
+          language === "am"
+            ? "አንድ ስህተት ተፈጥሯል። እባክዎን ደግመው ይሞክሩ።"
+            : "Something went wrong. Please try again.",
+      }));
+
       setStatus(data.status === "success" ? "success" : "error");
       showMessage(data.message);
 
@@ -71,8 +79,8 @@ const ClientAgreement = () => {
         form.reset();
         localStorage.removeItem("bookingData"); // ✅ Clear local storage
         setSubmitted(true); // ✅ Hide the form
-        // ✅ Redirect immediately
-        router.push("/book/agreementSuccess");
+        // ✅ Redirect safely
+        setTimeout(() => router.push("/book/agreementSuccess"), 300);
       }
     } catch (error) {
       console.error(error);
@@ -99,10 +107,7 @@ const ClientAgreement = () => {
     }, 5000);
   };
 
-  // ✅ Hide form after success
-  if (submitted) {
-    return null;
-  }
+  if (submitted) return null;
 
   return (
     <section className="relative z-10 overflow-hidden pt-36 pb-16 md:pb-20 lg:pt-[180px] lg:pb-28">
