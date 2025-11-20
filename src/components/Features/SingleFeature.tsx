@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Feature } from "@/types/feature";
 
 const SingleFeature = ({ feature }: { feature: Feature }) => {
@@ -7,11 +8,12 @@ const SingleFeature = ({ feature }: { feature: Feature }) => {
     <div className="w-full">
       <div className="wow fadeInUp" data-wow-delay=".15s">
         {/* Image */}
-        <div className="mb-6 overflow-hidden rounded-lg shadow-md">
-          <img
+        <div className="mb-6 overflow-hidden rounded-lg shadow-md relative w-full h-48 sm:h-56 md:h-60 lg:h-64">
+          <Image
             src={image}
             alt={title}
-            className="w-full h-48 object-cover sm:h-56 md:h-60 lg:h-64"
+            fill
+            className="object-cover"
           />
         </div>
 
