@@ -2,9 +2,14 @@
 import { Metadata } from "next";
 import BlogDetailsClient from "./BlogDetailsClient";
 
-// Dynamic metadata per blog
+// ---- Correct Type ----
+interface BlogPageProps {
+  params: { slug: string };
+}
+
+// ---- FIXED generateMetadata ----
 export async function generateMetadata(
-  { params }: { params: { slug: string } }
+  { params }: BlogPageProps
 ): Promise<Metadata> {
   try {
     const res = await fetch(
@@ -54,6 +59,7 @@ export async function generateMetadata(
   }
 }
 
-export default function BlogDetailsPage() {
-  return <BlogDetailsClient />;
+// ---- FIXED PAGE ----
+export default function BlogDetailsPage({ params }: BlogPageProps) {
+  return <BlogDetailsClient slug={params.slug} />;
 }
