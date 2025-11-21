@@ -1,13 +1,15 @@
 import { Metadata } from "next";
 import BlogDetailsClient from "./BlogDetailsClient";
 
-// FIXED types for Next.js 15.5
-type BlogParams = Promise<{ slug: string }>;
+// Correct type — NOT a Promise!
+type BlogParams = {
+  slug: string;
+};
 
 export async function generateMetadata(
   { params }: { params: BlogParams }
 ): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug } = params;
 
   try {
     const res = await fetch(
@@ -37,7 +39,7 @@ export async function generateMetadata(
 export default async function BlogDetailsPage(
   { params }: { params: BlogParams }
 ) {
-  const { slug } = await params;
+  const { slug } = params;
 
   return <BlogDetailsClient slug={slug} />;
 }
