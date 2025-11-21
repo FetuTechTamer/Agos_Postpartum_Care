@@ -2,7 +2,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import RelatedPost from "@/components/Blog/RelatedPost";
@@ -10,8 +9,11 @@ import SharePost from "@/components/Blog/SharePost";
 import TagButton from "@/components/Blog/TagButton";
 import NewsLatterBox from "@/components/Contact/NewsLatterBox";
 
-const BlogDetailsClient = () => {
-  const { slug } = useParams();
+interface BlogDetailsClientProps {
+  slug: string;
+}
+
+const BlogDetailsClient = ({ slug }: BlogDetailsClientProps) => {
   const [blog, setBlog] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [popularTags, setPopularTags] = useState<string[]>([]);
@@ -59,7 +61,7 @@ const BlogDetailsClient = () => {
   const { detail } = blog;
 
   return (
-    <section className="pt-[150px] pb-[120px]">
+<section className="pt-[150px] pb-[120px]">
       <div className="container">
         <div className="-mx-4 flex flex-wrap justify-center">
           {/* Main Blog Content */}
@@ -266,4 +268,3 @@ const BlogDetailsClient = () => {
 };
 
 export default BlogDetailsClient;
-
