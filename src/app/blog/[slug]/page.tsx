@@ -1,19 +1,17 @@
-// app/blog/[slug]/page.tsx
 import { Metadata } from "next";
 import BlogDetailsClient from "./BlogDetailsClient";
 
-// ---- Correct Type ----
-interface BlogPageProps {
-  params: { slug: string };
-}
+// FIXED types for Next.js 15.5
+type BlogParams = Promise<{ slug: string }>;
 
-// ---- FIXED generateMetadata ----
 export async function generateMetadata(
-  { params }: BlogPageProps
+  { params }: { params: BlogParams }
 ): Promise<Metadata> {
+  const { slug } = await params;
+
   try {
     const res = await fetch(
-      `http://localhost/Agos_Postpartum_Care/api/getBlogDetail.php?slug=${params.slug}`,
+      `http://localhost/Agos_Postpartum_Care/api/getBlogDetail.php?slug=${slug}`,
       { cache: "no-store" }
     );
 
@@ -26,32 +24,9 @@ export async function generateMetadata(
       description:
         blog?.detail?.summary ||
         blog?.detail?.content1?.slice(0, 150) ||
-        "Explore postpartum care insights, stories, and support from Agos Postpartum Care.",
-      openGraph: {
-        title: blog?.title || "Agos Postpartum Care Blog",
-        description:
-          blog?.detail?.summary ||
-          "Discover postpartum insights and support from Agos Postpartum Care.",
-        images: [
-          {
-            url: blog?.detail?.detail_image || "/images/default-blog-image.jpg",
-            width: 1200,
-            height: 630,
-            alt: blog?.title || "Agos Postpartum Care",
-          },
-        ],
-      },
-      twitter: {
-        card: "summary_large_image",
-        title: blog?.title || "Agos Postpartum Care Blog",
-        description:
-          blog?.detail?.summary ||
-          "Discover postpartum insights and support from Agos Postpartum Care.",
-        images: [blog?.detail?.detail_image || "/images/default-blog-image.jpg"],
-      },
+        "Explore postpartum care insights, stories, and support.",
     };
-  } catch (err) {
-    console.error("Error generating metadata:", err);
+  } catch {
     return {
       title: "Blog | Agos Postpartum Care",
       description: "Explore postpartum care insights and support.",
@@ -59,7 +34,10 @@ export async function generateMetadata(
   }
 }
 
-// ---- FIXED PAGE ----
-export default function BlogDetailsPage({ params }: BlogPageProps) {
-  return <BlogDetailsClient slug={params.slug} />;
+export default async function BlogDetailsPage(
+  { params }: { params: BlogParams }
+) {
+  const { slug } = await params;
+
+  return <BlogDetailsClient slug={slug} />;
 }
